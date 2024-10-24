@@ -1,0 +1,45 @@
+/* styles.qss */
+
+/* Общие стили для кнопок */
+QPushButton {
+    color: white;
+    font-size: 25px;
+    padding-bottom: 5px;
+    border: none;
+}
+
+/* Анимированные кнопки (классы определены через objectName) */
+#minimizeButton, #closeButton {
+    border-radius: 10px; /* Скругление углов */
+}
+
+/* Стиль для кнопок snd и mic */
+#sndButton, #micButton {
+    border-radius: 12px;  /* Скругление углов */
+    /* Дополнительные стили, если необходимо */
+}
+
+/* Стиль для заголовка */
+QLabel#titleLabel {
+    color: white;
+    font-size: 50px;  /* Увеличенный размер шрифта */
+}
+
+/* Стиль для текстового поля */
+QLineEdit {
+    color: white;
+    background-color: black;
+    border: 3px solid #333;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 20px;
+}
+
+QLineEdit:focus {
+    border-color: #9000ce;
+}
+
+/* Стиль для кастомного заголовка */
+CustomTitleBar {
+    background-color: black;
+}
