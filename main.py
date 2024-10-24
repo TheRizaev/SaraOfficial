@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtCore import QUrl, Qt, QPoint, QSize, QCoreApplication
-from PyQt5.QtGui import QIcon, QColor, QPainter, QBrush, QPixmap, QFontDatabase, QFont
+from PyQt5.QtGui import QIcon, QColor, QPainter, QBrush, QPen, QPixmap, QFontDatabase, QFont
 
 # Импортируем AnimatedButton
 from config.animation import AnimatedButton  # Убедитесь, что файл animated_button.py находится в той же директории или в PYTHONPATH
@@ -130,10 +130,8 @@ class MainWindow(QMainWindow):
         bottom_layout = QHBoxLayout()
 
         # Спейсер слева
-        # Метод 1: Добавляем фиксированный спейсер слева для смещения правее
         fixed_spacer = QSpacerItem(330, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
         bottom_layout.addSpacerItem(fixed_spacer)
-
 
         # Текстовое поле с градиентом
         text_input = QLineEdit()
@@ -158,10 +156,10 @@ class MainWindow(QMainWindow):
     def create_icon_button(self, key):
         if key == "snd":
             # Кнопка отправки с розовыми оттенками
-            button = AnimatedButton(parent=self, bg_color=QColor(66,0,133,1), hover_color=QColor(255, 182, 193, 255))
+            button = AnimatedButton(parent=self, bg_color=QColor(66, 0, 133, 255), hover_color=QColor(255, 182, 193, 255))
         elif key == "mic":
             # Кнопка микрофона с розовыми оттенками
-            button = AnimatedButton(parent=self, bg_color=QColor(66,0,133,1), hover_color=QColor(255, 192, 203, 255))
+            button = AnimatedButton(parent=self, bg_color=QColor(66, 0, 133, 255), hover_color=QColor(255, 192, 203, 255))
 
         button.setFixedSize(50, 50)
         icon_path = ICON_PATHS.get(key)
@@ -174,18 +172,46 @@ class MainWindow(QMainWindow):
         button.setIconSize(QSize(30, 30))
         button.setCursor(Qt.PointingHandCursor)
         button.setObjectName(f"{key}Button")
-        # Добавляем скругление углов через AnimatedButton
-        # Цвета уже установлены через AnimatedButton
         return button
 
     def paintEvent(self, event):
-        # Закругляем углы окна
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
+
         rect = self.rect()
-        painter.setBrush(QBrush(QColor(0, 0, 0)))
+
+        # Отрисовка основного фона с закруглёнными углами
+        painter.setBrush(QBrush(QColor(0, 0, 0)))  # Черный фон
         painter.setPen(Qt.NoPen)
         painter.drawRoundedRect(rect, 20, 20)
+
+        # Параметры рамки
+        border_color = QColor(128, 128, 128)  # Серый цвет
+        border_width = 2  # Толщина рамки
+
+        # Настройка пера для рамки
+        pen = QPen(border_color)
+        pen.setWidth(border_width)
+        painter.setPen(pen)
+        painter.setBrush(Qt.NoBrush)
+
+        # Корректировка прямоугольника для рамки, чтобы она не выходила за пределы окна
+        adjusted_rect = rect.adjusted(
+            border_width // 2,   # Используем целочисленное деление
+            border_width // 2,
+            -border_width // 2,
+            -border_width // 2
+        )
+
+        # Отрисовка рамки с закруглёнными углами
+        painter.drawRoundedRect(adjusted_rect, 20, 20)
+
+    def load_stylesheet(app, stylesheet_path):
+        if os.path.exists(stylesheet_path):
+            with open(stylesheet_path, "r", encoding="utf-8") as f:
+                app.setStyleSheet(f.read())
+        else:
+            print(f"Stylesheet file '{stylesheet_path}' not found.")
 
 def load_stylesheet(app, stylesheet_path):
     if os.path.exists(stylesheet_path):
